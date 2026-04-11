@@ -135,7 +135,39 @@ docker run -p 8000:8000 student-api
 
 ## CI/CD
 
-The GitHub Actions workflow in `.github/workflows/ci.yml` installs dependencies, initializes DVC if needed, runs `dvc repro`, and builds the Docker image.
+The GitHub Actions workflow in `.github/workflows/ci.yml` installs dependencies, configures a DVC remote from GitHub Secrets, runs `dvc pull`, runs `dvc repro`, and builds the Docker image.
+
+## DVC Remote Setup (Required for CI Retraining)
+
+CI retraining needs access to DVC-tracked data. Since `data/student.csv` is ignored by Git, configure a DVC remote.
+
+### Generic Secret Names Used by CI
+
+Add these repository secrets in GitHub:
+
+- `DVC_REMOTE_URL` (required)
+- `DVC_ENDPOINT_URL` (optional, needed for S3-compatible providers like DagsHub)
+- `DVC_ACCESS_KEY_ID` (optional)
+- `DVC_SECRET_ACCESS_KEY` (optional)
+
+### DagsHub Example
+
+For DagsHub DVC storage, use:
+
+- `DVC_REMOTE_URL`: `s3://dvc`
+- `DVC_ENDPOINT_URL`: `https://dagshub.com/<username>/<repo>.s3`
+- `DVC_ACCESS_KEY_ID`: your DagsHub username
+- `DVC_SECRET_ACCESS_KEY`: your DagsHub access token
+
+Local commands for the same remote:
+
+```bash
+dvc remote add -d origin s3://dvc
+dvc remote modify origin endpointurl https://dagshub.com/<username>/<repo>.s3
+dvc remote modify --local origin access_key_id <dagshub-username>
+dvc remote modify --local origin secret_access_key <dagshub-token>
+dvc push
+```
 
 ## Auto Retraining
 

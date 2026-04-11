@@ -24,11 +24,33 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Initialize DVC repo if missing
+      - name: Check DVC
+        run: dvc --version
+
+      - name: Configure DVC remote
+        env:
+          DVC_REMOTE_URL: ${{ secrets.DVC_REMOTE_URL }}
+          DVC_ENDPOINT_URL: ${{ secrets.DVC_ENDPOINT_URL }}
+          DVC_ACCESS_KEY_ID: ${{ secrets.DVC_ACCESS_KEY_ID }}
+          DVC_SECRET_ACCESS_KEY: ${{ secrets.DVC_SECRET_ACCESS_KEY }}
         run: |
-          if [ ! -d .dvc ]; then
-            dvc init -f --no-scm
+          if [ -z "$DVC_REMOTE_URL" ]; then
+            echo "Missing DVC_REMOTE_URL secret. CI cannot pull DVC data."
+            exit 1
           fi
+          dvc remote add -d ci-remote "$DVC_REMOTE_URL" --force
+          if [ -n "$DVC_ENDPOINT_URL" ]; then
+            dvc remote modify ci-remote endpointurl "$DVC_ENDPOINT_URL"
+          fi
+          if [ -n "$DVC_ACCESS_KEY_ID" ]; then
+            dvc remote modify --local ci-remote access_key_id "$DVC_ACCESS_KEY_ID"
+          fi
+          if [ -n "$DVC_SECRET_ACCESS_KEY" ]; then
+            dvc remote modify --local ci-remote secret_access_key "$DVC_SECRET_ACCESS_KEY"
+          fi
+
+      - name: Pull DVC data
+        run: dvc pull
 
       - name: Reproduce pipeline
         run: dvc repro

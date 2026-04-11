@@ -8,3 +8,4 @@ mlruns/
 .dvc/tmp/
 .ipynb_checkpoints/
 .DS_Store
+data/student.csv
