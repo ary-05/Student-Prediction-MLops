@@ -147,6 +147,6 @@ dvc repro
 
 This retrains the model and updates `app/model.pkl`.
 
-## Viva Summary
+## Summary
 
 This project implements an end-to-end MLOps pipeline where data is versioned using DVC, models are trained and tracked using MLflow, deployed via FastAPI in Docker containers, and automated using CI/CD pipelines. The system supports continuous retraining when new data is introduced.
