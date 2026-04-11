@@ -1,0 +1,12 @@
+.git
+.dvc
+.dvcignore
+mlruns
+__pycache__
+*.pyc
+.venv
+venv
+.ipynb_checkpoints
+README.md
+requirements.txt
+training
