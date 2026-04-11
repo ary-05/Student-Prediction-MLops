@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from pathlib import Path
-
 import joblib
 import mlflow
 import pandas as pd
@@ -23,7 +21,6 @@ def load_data() -> tuple[pd.DataFrame, pd.Series]:
     features = dataset[["study_hours", "attendance", "previous_marks"]].astype(float)
     target = dataset["pass"]
     return features, target
-
 
 def train_model() -> dict[str, float]:
     features, target = load_data()
