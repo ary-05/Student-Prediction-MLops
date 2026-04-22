@@ -7,8 +7,8 @@ stages:
     deps:
     - path: data/student.csv
       hash: md5
-      md5: 10199380b9064dbffc9dcc5f988dc365
-      size: 1534
+      md5: ad480eb73842f4ad98b128bc889f1a19
+      size: 1533
     - path: training/train.py
       hash: md5
       md5: c17c5ad76c927059c87889debcc14fb0
